@@ -1,0 +1,8 @@
+{
+  "name": "Stockbeats",
+  "description": "Real-time cross-device stock tracker with live market quotes, interactive charts, synced watchlists, portfolio holdings, and price alerts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

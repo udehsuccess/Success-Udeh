@@ -1,0 +1,303 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile and cross-device workspace preferences.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "Firebase Auth UID of the user."
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Display name shown in the account menu."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "minLength": 3,
+          "maxLength": 254,
+          "description": "Private email address restricted to the owner."
+        },
+        "photoURL": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional profile avatar URL."
+        },
+        "selectedSymbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12,
+          "pattern": "^[A-Z0-9.\\-]+$",
+          "description": "Currently active stock symbol synced across devices."
+        },
+        "activeWatchlistId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]*$",
+          "description": "Currently selected watchlist document ID."
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark"],
+          "description": "Synced visual theme preference."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was last updated."
+        }
+      },
+      "required": [
+        "uid",
+        "displayName",
+        "email",
+        "selectedSymbol",
+        "theme",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Watchlist": {
+      "title": "Watchlist",
+      "description": "User-defined collection of tracked stock symbols synced in real time.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "UID of the owning user."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "description": "Watchlist title."
+        },
+        "symbols": {
+          "type": "array",
+          "description": "Bounded array of up to 50 uppercase stock ticker symbols."
+        },
+        "sortOrder": {
+          "type": "number",
+          "description": "Display ordering index between 0 and 1000."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated."
+        }
+      },
+      "required": [
+        "ownerId",
+        "name",
+        "symbols",
+        "sortOrder",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Holding": {
+      "title": "Holding",
+      "description": "Portfolio stock position with share quantity and average cost basis.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "UID of the owning user."
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12,
+          "pattern": "^[A-Z0-9.\\-]+$",
+          "description": "Uppercase stock ticker symbol."
+        },
+        "companyName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "description": "Company display name."
+        },
+        "shares": {
+          "type": "number",
+          "description": "Number of shares held (must be > 0)."
+        },
+        "avgCost": {
+          "type": "number",
+          "description": "Average purchase price per share in USD."
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Optional investment thesis or lot note."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated."
+        }
+      },
+      "required": [
+        "ownerId",
+        "symbol",
+        "companyName",
+        "shares",
+        "avgCost",
+        "notes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PriceAlert": {
+      "title": "PriceAlert",
+      "description": "Real-time stock price target alert synced across devices.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "UID of the owning user."
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 12,
+          "pattern": "^[A-Z0-9.\\-]+$",
+          "description": "Uppercase stock ticker symbol."
+        },
+        "condition": {
+          "type": "string",
+          "enum": ["above", "below"],
+          "description": "Trigger direction relative to targetPrice."
+        },
+        "targetPrice": {
+          "type": "number",
+          "description": "Target price threshold in USD."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "triggered", "dismissed"],
+          "description": "Lifecycle state of the alert. Dismissed is terminal."
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Optional alert memo."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when last updated."
+        }
+      },
+      "required": [
+        "ownerId",
+        "symbol",
+        "condition",
+        "targetPrice",
+        "status",
+        "note",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DeviceSession": {
+      "title": "DeviceSession",
+      "description": "Active browser or device session synced under the user account.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$",
+          "description": "UID of the owning user."
+        },
+        "deviceLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Human-readable browser and platform label."
+        },
+        "deviceType": {
+          "type": "string",
+          "enum": ["desktop", "tablet", "mobile"],
+          "description": "Device form factor."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when session registered."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of latest heartbeat."
+        }
+      },
+      "required": [
+        "ownerId",
+        "deviceLabel",
+        "deviceType",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Owner-only user profile and cross-device workspace preferences."
+    },
+    "/users/{userId}/watchlists/{watchlistId}": {
+      "schema": { "$ref": "#/entities/Watchlist" },
+      "description": "Real-time synced stock watchlists belonging to a user."
+    },
+    "/users/{userId}/holdings/{holdingId}": {
+      "schema": { "$ref": "#/entities/Holding" },
+      "description": "Real-time synced portfolio stock positions belonging to a user."
+    },
+    "/users/{userId}/alerts/{alertId}": {
+      "schema": { "$ref": "#/entities/PriceAlert" },
+      "description": "Real-time synced price target alerts belonging to a user."
+    },
+    "/users/{userId}/sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/DeviceSession" },
+      "description": "Real-time active device sessions for the user."
+    }
+  }
+}
